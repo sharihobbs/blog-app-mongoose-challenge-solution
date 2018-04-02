@@ -62,13 +62,13 @@ describe('blog posts API resource', function () {
         .get('/posts')
         .then(_res => {
           res = _res;
-          expect.res.to.have.status(200);
-          expect.res.body.to.have.length.of.at.least(1);
+          expect(res).to.have.status(200);
+          expect(res.body).to.have.length.of.at.least(1);
 
           return BlogPost.count();
         })
         .then(count => {
-          expect.res.body.to.have.length.of(count);
+          expect(res.body).to.have.length.of(count);
         });
     });
 
@@ -77,21 +77,21 @@ describe('blog posts API resource', function () {
     return chai.request(app)
       .get('/posts')
       .then(function (res) {
-        expect.res.to.have.status(200);
-        expect.res.to.be.json;
-        expect.res.body.to.be.a('array');
-        expect.res.body.to.have.length.of.at.least(1);
+        expect(res).to.have.status(200);
+        expect(res).to.be.json;
+        expect(res.body).to.be.a('array');
+        expect(res.body).to.have.length.of.at.least(1);
         res.body.forEach(function (post) {
-          expect.post.to.be.a('object');
-          expect.post.to.include.keys('id', 'title', 'content', 'author', 'created');
+          expect(post).to.be.a('object');
+          expect(post).to.include.keys('id', 'title', 'content', 'author', 'created');
         });
         resPost = res.body[0];
         return BlogPost.findByID(resPost.id);
       })
       .then(post => {
-        expect.resPost.title.to.be(post.title);
-        expect.resPost.content.to.be(post.content);
-        expect.resPost.author.to.be(post.authorName);
+        expect(resPost.title).to.be(post.title);
+        expect(resPost.content).to.be(post.content);
+        expect(resPost.author).to.be(post.authorName);
       });
   });
 });
@@ -111,22 +111,22 @@ describe('POST endpoint', function () {
       .post('/posts')
       .send(newPost)
       .then (function (res) {
-        expect.res.to.have.status(201);
-        expect.res.to.be.json;
-        expect.res.body.to.be.a('object');
-        expect.res.body.to.include.keys('id', 'title', 'content', 'author', 'created');
-        expect.res.body.title.to.equal(newPost.title);
-        expect.res.body.id.to.not.be.null;
-        expect.res.body.author.to.equal(
+        expect(res).to.have.status(201);
+        expect(res).to.be.json;
+        expect(res.body).to.be.a('object');
+        expect(res.body).to.include.keys('id', 'title', 'content', 'author', 'created');
+        expect(res.body.title).to.equal(newPost.title);
+        expect(res.body.id).to.not.be.null;
+        expect(res.body.author).to.equal(
           `${newPost.author.firstName} ${newPost.author.lastName}`);
-        expect.res.body.content.to.equal(newPost.content);
+        expect(res.body.content).to.equal(newPost.content);
         return BlogPost.findById(res.body.id);
       })
       .then(function (post) {
-        expect.post.title.to.be.equal.to(newPost.title);
-        expect.post.content.to.be.equal.to(newPost.content);
-        expect.post.author.firstName.to.be.equal.to(newPost.author.firstName);
-        expect.post.author.lastName.to.be.equal.to(newPost.author.lastName);
+        expect(post.title).to.be.equal.to(newPost.title);
+        expect(post.content).to.be.equal.to(newPost.content);
+        expect(post.author.firstName).to.be.equal.to(newPost.author.firstName);
+        expect(post.author.lastName).to.be.equal.to(newPost.author.lastName);
       });
   });
 });
@@ -147,18 +147,18 @@ describe('PUT endpoint', function () {
         .then(post => {
           updatedPost.id = post.id;
           return chai.request(app)
-            .put(`/posts/${post.id}`)
-            .send(updatedPost);
+          .put(`/posts/${post.id}`)
+          .send(updatedPost);
         })
         .then(res => {
-          expect.res.to.have.status(204);
+          expect(res).to.have.status(204);
           return BlogPost.findById(updatedPost.id);
         })
         .then(post => {
-          expect.post.title.to.be.equal.to(updatedPost.title);
-          expect.post.content.to.be.equal.to(updatedPost.content);
-          expect.post.author.firstName.to.be.equal.to(updatedPost.author.firstName);
-          expect.post.author.lastName.to.be.equal.to(updatedPost.author.lastName);
+          expect(post.title).to.be.equal.to(updatedPost.title);
+          expect(post.content).to.be.equal.to(updatedPost.content);
+          expect(post.author.firstName).to.be.equal.to(updatedPost.author.firstName);
+          expect(post.author.lastName).to.be.equal.to(updatedPost.author.lastName);
         });
     });
   });
@@ -173,7 +173,7 @@ describe('PUT endpoint', function () {
           return chai.request(app).delete(`/posts/${post.id}`);
         })
         .then(res => {
-          expect.res.to.have.status(204);
+          expect(res).to.have.status(204);
           return BlogPost.findById(post.id);
         })
         .then(_post => {
