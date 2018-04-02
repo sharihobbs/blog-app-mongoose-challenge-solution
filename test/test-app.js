@@ -8,7 +8,6 @@ const mongoose = require('mongoose');
 // this makes the expect syntax available throughout
 // this module
 const expect = chai.expect;
-const should = chai.should;
 
 const { BlogPost } = require('../models');
 const { app, runServer, closeServer } = require('../server');
@@ -63,12 +62,12 @@ describe('blog posts API resource', function () {
         .then(_res => {
           res = _res;
           expect(res).to.have.status(200);
-          expect(res.body).to.have.length.of.at.least(1);
+          expect(res.body).to.have.lengthOf.at.least(1);
 
           return BlogPost.count();
         })
         .then(count => {
-          expect(res.body).to.have.length.of(count);
+          expect(res.body).to.have.lengthOf(count);
         });
     });
 
@@ -80,18 +79,18 @@ describe('blog posts API resource', function () {
         expect(res).to.have.status(200);
         expect(res).to.be.json;
         expect(res.body).to.be.a('array');
-        expect(res.body).to.have.length.of.at.least(1);
+        expect(res.body).to.have.lengthOf.at.least(1);
         res.body.forEach(function (post) {
           expect(post).to.be.a('object');
           expect(post).to.include.keys('id', 'title', 'content', 'author', 'created');
         });
         resPost = res.body[0];
-        return BlogPost.findByID(resPost.id);
+        return BlogPost.findById(resPost.id);
       })
       .then(post => {
-        expect(resPost.title).to.be(post.title);
-        expect(resPost.content).to.be(post.content);
-        expect(resPost.author).to.be(post.authorName);
+        expect(resPost.title).to.equal(post.title);
+        expect(resPost.content).to.equal(post.content);
+        expect(resPost.author).to.equal(post.authorName);
       });
   });
 });
@@ -102,7 +101,7 @@ describe('POST endpoint', function () {
       title: faker.lorem.sentence(),
       author: {
         firstName: faker.name.firstName(),
-        lastName: faker.name.lastName(),
+        lastName: faker.name.lastName()
       },
       content: faker.lorem.text()
     };
@@ -123,10 +122,10 @@ describe('POST endpoint', function () {
         return BlogPost.findById(res.body.id);
       })
       .then(function (post) {
-        expect(post.title).to.be.equal.to(newPost.title);
-        expect(post.content).to.be.equal.to(newPost.content);
-        expect(post.author.firstName).to.be.equal.to(newPost.author.firstName);
-        expect(post.author.lastName).to.be.equal.to(newPost.author.lastName);
+        expect(post.title).to.equal(newPost.title);
+        expect(post.content).to.equal(newPost.content);
+        expect(post.author.firstName).to.equal(newPost.author.firstName);
+        expect(post.author.lastName).to.equal(newPost.author.lastName);
       });
   });
 });
@@ -155,10 +154,10 @@ describe('PUT endpoint', function () {
           return BlogPost.findById(updatedPost.id);
         })
         .then(post => {
-          expect(post.title).to.be.equal.to(updatedPost.title);
-          expect(post.content).to.be.equal.to(updatedPost.content);
-          expect(post.author.firstName).to.be.equal.to(updatedPost.author.firstName);
-          expect(post.author.lastName).to.be.equal.to(updatedPost.author.lastName);
+          expect(post.title).to.equal(updatedPost.title);
+          expect(post.content).to.equal(updatedPost.content);
+          expect(post.author.firstName).to.equal(updatedPost.author.firstName);
+          expect(post.author.lastName).to.equal(updatedPost.author.lastName);
         });
     });
   });
@@ -177,7 +176,7 @@ describe('PUT endpoint', function () {
           return BlogPost.findById(post.id);
         })
         .then(_post => {
-          should.not.exist(_post);
+          expect(_post).to.not.exist;
         });
     });
   });
